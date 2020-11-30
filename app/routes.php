@@ -25,13 +25,16 @@ $app->add(function ($req, $res, $next) {
 });
 
 /** =============== ROUTES =============== */
-$app->get('/', 'HomeController:home');
+$app->get('/', 'HomeController:home')->setName('home');
+
+$app->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
+$app->post('/auth/signup', 'AuthController:postSignUp');
 
 $app->get('/patients', 'PatientController:getAll');
 $app->get('/patients/{cid}', 'PatientController:getByCid');
 
-$app->get('/user', 'UserController:index');
-$app->get('/user/{cid}', 'UserController:user');
+$app->get('/users', 'UserController:index');
+$app->get('/users/{cid}', 'UserController:user');
 
 /** use this route if page not found. */
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/routes:.+', function ($req, $res) {
