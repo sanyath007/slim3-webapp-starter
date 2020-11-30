@@ -1,18 +1,8 @@
 <?php
 namespace App\Controllers;
 
-use Psr\Container\ContainerInterface;
-
-class UserController
+class UserController extends Controller
 {
-	protected $container;
-    protected $view;
-
-    public function __construct(ContainerInterface $container) 
-    {
-        $this->container = $container;
-    }
-
     public function index($request, $response, $args) 
     {
 		$users = new \App\Models\User;
@@ -24,7 +14,7 @@ class UserController
     {
     	try {
 			$cid = $args['cid'];
-			$conn = $this->container->db;
+			$conn = $this->db;
 
 			$sql = "SELECT e.*, p.position_name 
 					FROM employees e 
