@@ -1,5 +1,7 @@
 <?php
 
+use Respect\Validation\Validator as v;
+
 session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -21,6 +23,8 @@ $app = new Slim\App($config);
  * ============================================================
  */
 require __DIR__ . '/../app/dependencies.php';
+
+v::with('App\\Validation\\Rules\\');
 
 /** 
  * ============================================================
