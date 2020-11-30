@@ -1,13 +1,14 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\User;
+
 class HomeController extends Controller
 {
     public function home($req, $res, $args)
     {
-        $user = $this->db->table('users')->find(1);
+        $user = User::find(1);
 
-        // die();
         $this->view->render($res, 'home.html.twig', [
             'user' => $user
         ]);
