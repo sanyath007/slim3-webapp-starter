@@ -4,7 +4,7 @@ $container = $app->getContainer();
 
 /** 
  * ============================================================
- * Use data model with Eloquent
+ * Inject data model with using Eloquent
  * ============================================================
  */
 $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -14,7 +14,7 @@ $capsule->bootEloquent();
 
 /** 
  * ============================================================
- * Set database connection 
+ * Inject database connection 
  * ============================================================
  */
 
@@ -37,7 +37,7 @@ $container['db'] = function($c) use ($capsule) {
 
 /** 
  * ============================================================
- * Set main view with twig template engine
+ * Inject view with using twig template engine
  * ============================================================
  */
 $container['view'] = function ($c) {
@@ -62,7 +62,16 @@ $container['view'] = function ($c) {
 
 /** 
  * ============================================================
- * Register Controllers
+ * Inject Validator
+ * ============================================================
+ */
+$container['validator'] = function($c) {
+    return new App\Validation\validator;
+};
+
+/** 
+ * ============================================================
+ * Inject Controllers
  * ============================================================
  */
 $container['HomeController'] = function ($c) {
