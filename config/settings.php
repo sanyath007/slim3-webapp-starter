@@ -5,7 +5,7 @@ return [
     // Template paths
     'twig' => [
         'paths' => [
-            realpath(__DIR__ . '/..') . '/app/views',
+            realpath(__DIR__ . '/..') . '/resources/views',
         ],
         // Twig environment options
         'options' => [

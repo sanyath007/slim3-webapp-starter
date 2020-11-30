@@ -13,11 +13,11 @@ class UserController
         $this->container = $container;
     }
 
-    public function home($request, $response, $args) 
+    public function index($request, $response, $args) 
     {
-      // your code here
-      // use $this->view to render the HTML
-      return $response;
+		$users = new \App\Models\User;
+
+		var_dump($users);
     }
 
     public function user($req, $res, $args)

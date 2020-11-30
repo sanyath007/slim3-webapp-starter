@@ -30,6 +30,7 @@ $app->get('/', 'HomeController:home');
 $app->get('/patients', 'PatientController:getAll');
 $app->get('/patients/{cid}', 'PatientController:getByCid');
 
+$app->get('/user', 'UserController:index');
 $app->get('/user/{cid}', 'UserController:user');
 
 /** use this route if page not found. */
