@@ -7,7 +7,7 @@ $container = $app->getContainer();
  * Inject data model with using Eloquent
  * ============================================================
  */
-$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule = new Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
@@ -44,13 +44,13 @@ $container['view'] = function ($c) {
     $template_path = $c['settings']['twig']['paths'];
     $cache_path = $c['settings']['twig']['options']['cache_path'];
 
-    $view = new \Slim\Views\Twig($template_path, [
+    $view = new Slim\Views\Twig($template_path, [
         'cache' => false
     ]);
 
     $router = $c->get('router');
     
-    $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+    $uri = \Slim\Http\Uri::createFromEnvironment(new Slim\Http\Environment($_SERVER));
     
     $view->addExtension(new \Slim\Views\TwigExtension(
         $router,
@@ -75,17 +75,24 @@ $container['validator'] = function($c) {
  * ============================================================
  */
 $container['HomeController'] = function ($c) {
-    return new \App\Controllers\HomeController($c);
+    return new App\Controllers\HomeController($c);
 };
 
 $container['AuthController'] = function ($c) {
-    return new \App\Controllers\Auth\AuthController($c);
+    return new App\Controllers\Auth\AuthController($c);
 };
 
 $container['UserController'] = function ($c) {
-    return new \App\Controllers\UserController($c);
+    return new App\Controllers\UserController($c);
 };
 
 $container['PatientController'] = function ($c) {
-    return new \App\Controllers\PatientController($c);
+    return new App\Controllers\PatientController($c);
 };
+
+/** 
+ * ============================================================
+ * Inject Middleware
+ * ============================================================
+ */
+$app->add(new App\Middleware\ValidationErrorsMiddleware($container));
