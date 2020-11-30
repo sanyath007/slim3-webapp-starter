@@ -2,10 +2,10 @@
 return [
    'db' => [
 		'driver' => 'mysql',
-     	'host' 	=>'192.168.20.7',
-     	'username' => 'sa',
-     	'password' => 'sa',
-		'database' => 'hos2',
+     	'host' 	=>'localhost',
+     	'username' => 'root',
+     	'password' => '',
+		'database' => 'test',
 		'port' => '3306',
 		'charset' => 'utf8',
 		'collation' => 'utf8_unicode_ci',

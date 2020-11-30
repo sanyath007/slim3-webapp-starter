@@ -1,19 +1,45 @@
 <?php
+
 $container = $app->getContainer();
 
-/** =============== Set database connection =============== */
-$container['db'] = function ($c) {
-    try {
-        $db = $c['settings']['db'];
+/** 
+ * ============================================================
+ * Use data model with Eloquent
+ * ============================================================
+ */
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($container['settings']['db']);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
-        return new PDO($db['driver']. ":host=" .$db['host']. ";dbname=" .$db['database'], $db['username'], $db['password'], $db['options']);
-    }
-    catch(\Exception $ex) {
-        return $ex->getMessage();
-    }   
+/** 
+ * ============================================================
+ * Set database connection 
+ * ============================================================
+ */
+
+/** ===================== Using PDO ===================== */
+// $container['db'] = function ($c) {
+//     try {
+//         $conStr = $c['settings']['db'];
+
+//         return new PDO($conStr['driver']. ":host=" .$conStr['host']. ";dbname=" .$conStr['database'], $conStr['username'], $conStr['password'], $conStr['options']);
+//     }
+//     catch(\Exception $ex) {
+//         return $ex->getMessage();
+//     }   
+// };
+
+/** ===================== Using Eloquent ===================== */
+$container['db'] = function($c) use ($capsule) {
+    return $capsule;
 };
 
-/** =============== Register Controllers =============== */
+/** 
+ * ============================================================
+ * Set main view with twig template engine
+ * ============================================================
+ */
 $container['view'] = function ($c) {
     $template_path = $c['settings']['twig']['paths'];
     $cache_path = $c['settings']['twig']['options']['cache_path'];
@@ -34,7 +60,11 @@ $container['view'] = function ($c) {
     return $view;
 };
 
-/** =============== Register Controllers =============== */
+/** 
+ * ============================================================
+ * Register Controllers
+ * ============================================================
+ */
 $container['HomeController'] = function ($c) {
     return new \App\Controllers\HomeController($c);
 };
