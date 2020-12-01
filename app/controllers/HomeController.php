@@ -10,7 +10,7 @@ class HomeController extends Controller
     {
         $user = User::find(1);
 
-        $this->view->render($res, 'home.html.twig', [
+        $this->view->render($res, 'home.twig', [
             'user' => $user
         ]);
     }

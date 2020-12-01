@@ -9,6 +9,8 @@
 				<div class="card-body">
 
 					<form action="{{ path_for('auth.signup') }}" method="post" autocomplete="off">
+						{{ csrf.field | raw }}
+
 						<div class="form-group">
 							<label for="email">Email</label>
 							<input type="email" name="email" id="email" placeholder="you@domain" class="form-control{{ errors.email ? ' is-invalid' : '' }}" value="{{ old.email }}">

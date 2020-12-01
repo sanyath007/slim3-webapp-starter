@@ -8,7 +8,7 @@ class PatientController extends Controller
         $result = $this->db->query("SELECT * FROM patient limit 10");
         $patients = $result->fetchAll(\PDO::FETCH_OBJ);
         
-        $this->view->render($res, 'patient.html.twig', [
+        $this->view->render($res, 'patient.twig', [
             'patients' => $patients
         ]);
     }
@@ -23,7 +23,7 @@ class PatientController extends Controller
         $result->execute($values);
         $patient = $result->fetch(\PDO::FETCH_OBJ);
 
-        $this->view->render($res, 'patient.html.twig', [
+        $this->view->render($res, 'patient.twig', [
             'patient' => $patient
         ]);
     }
