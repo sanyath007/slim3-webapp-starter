@@ -2,6 +2,9 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+use App\Middleware\AuthMiddleware;
+use App\Middleware\GuestMiddleware;
+
 /** =============== CORS =============== */
 $app->options('./{routes:.+}', function ($req, $res) {
     return $res;
@@ -27,19 +30,23 @@ $app->add(function ($req, $res, $next) {
 /** =============== ROUTES =============== */
 $app->get('/', 'HomeController:home')->setName('home');
 
-$app->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
-$app->post('/auth/signup', 'AuthController:postSignUp');
+$app->group('', function() {
+    $this->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
+    $this->post('/auth/signup', 'AuthController:postSignUp');
 
-$app->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
-$app->post('/auth/signin', 'AuthController:postSignIn');
+    $this->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
+    $this->post('/auth/signin', 'AuthController:postSignIn');
+})->add(new GuestMiddleware($container));
 
-$app->get('/auth/signout', 'AuthController:getSignOut')->setName('auth.signout');
-
-$app->get('/patients', 'PatientController:getAll');
-$app->get('/patients/{cid}', 'PatientController:getByCid');
-
-$app->get('/users', 'UserController:index');
-$app->get('/users/{cid}', 'UserController:user');
+$app->group('', function() {
+    $this->get('/auth/signout', 'AuthController:getSignOut')->setName('auth.signout');
+    
+    $this->get('/patients', 'PatientController:getAll')->setName('patients');;
+    $this->get('/patients/{cid}', 'PatientController:getByCid')->setName('patient');;
+    
+    $this->get('/users', 'UserController:index')->setName('users');
+    $this->get('/users/{cid}', 'UserController:user')->setName('user');;
+})->add(new AuthMiddleware($container));
 
 /** use this route if page not found. */
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/routes:.+', function ($req, $res) {
