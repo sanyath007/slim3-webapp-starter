@@ -8,7 +8,7 @@ class Auth
 {
     public function user()
     {
-        return User::find($_SESSION['user']);
+        if(array_key_exists('user', $_SESSION)) return User::find($_SESSION['user']);
     }
 
     public function check()
@@ -30,5 +30,10 @@ class Auth
         }
 
         return false;
+    }
+
+    public function logout()
+    {
+        unset($_SESSION['user']);
     }
 }
