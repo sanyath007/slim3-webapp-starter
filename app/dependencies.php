@@ -35,6 +35,17 @@ $container['db'] = function($c) use ($capsule) {
     return $capsule;
 };
 
+
+
+/** 
+ * ============================================================
+ * Inject Auth class
+ * ============================================================
+ */
+$container['auth'] = function($c) {
+    return new App\Auth\Auth;
+};
+
 /** 
  * ============================================================
  * Inject view with using twig template engine
@@ -56,6 +67,11 @@ $container['view'] = function ($c) {
         $router,
         $uri
     ));
+
+    $view->getEnvironment()->addGlobal('auth', [
+        'check' => $c->auth->check(),
+        'user' => $c->auth->user(),
+    ]);
 
     return $view;
 };
@@ -97,10 +113,6 @@ $container['PatientController'] = function ($c) {
  */
 $container['csrf'] = function($c) {
     return new \Slim\Csrf\Guard;
-};
-
-$container['auth'] = function($c) {
-    return new App\Auth\Auth;
 };
 
 $app->add(new App\Middleware\ValidationErrorsMiddleware($container));
