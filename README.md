@@ -1,1 +1,1 @@
-# slim3-nsomis-api
+# slim3-webapp-starter
