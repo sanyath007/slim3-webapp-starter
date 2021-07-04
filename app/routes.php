@@ -6,6 +6,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 
+/** For request options http method */
 $app->options('/{routes:.+}', function($request, $response, $args) {
     return $response;
 });
@@ -31,6 +32,8 @@ $app->group('', function() {
 
 /** use this route if page not found. */
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/routes:.+', function ($req, $res) {
-    $handler = $this->notFoundHandler; //using default slim page not found handler.
+    /** using default slim page not found handler. */
+    $handler = $this->notFoundHandler;
+
     return $handler($req, $res);
 });

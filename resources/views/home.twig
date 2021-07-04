@@ -2,12 +2,14 @@
 
 {% block content %}
 
-    <div class="row" style="border: 1px solid #000;"> 
+    <div class="card" style="border: 1px solid #000;"> 
+        <div class="card-body">
 
-        <h1>This is Home Page.</h1>
+            <h1>This is Home Page.</h1>
         
-        <p>Current user is {{ user.email }}</p>
+            <p>Current user is {{ user.email }}</p>
 
+        </div>
     </div>
 
 {% endblock %}
