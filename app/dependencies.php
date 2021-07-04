@@ -1,16 +1,39 @@
 <?php
 
+use Tuupola\Middleware\HttpBasicAuthentication;
+
 $container = $app->getContainer();
+
+/** 
+ * ============================================================
+ * Inject error handler
+ * ============================================================
+ */
+
+$container['errorHandler'] = function ($c) {
+    return function ($request, $response, $exception) use ($c) {
+        return $response
+                ->withStatus(500)
+                ->withHeader("Content-Type", "application/json")
+                ->write($exception->getMessage());
+    };
+};
 
 /** 
  * ============================================================
  * Inject data model with using Eloquent
  * ============================================================
  */
+
 $capsule = new Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
+
+/** ===================== Using Eloquent ===================== */
+$container['db'] = function($c) use ($capsule) {
+    return $capsule;
+};
 
 /** 
  * ============================================================
@@ -29,13 +52,6 @@ $capsule->bootEloquent();
 //         return $ex->getMessage();
 //     }   
 // };
-
-/** ===================== Using Eloquent ===================== */
-$container['db'] = function($c) use ($capsule) {
-    return $capsule;
-};
-
-
 
 /** 
  * ============================================================
@@ -87,6 +103,37 @@ $container['validator'] = function($c) {
 
 /** 
  * ============================================================
+ * Inject Logger
+ * ============================================================
+ */
+$container['logger'] = function($c) {
+    $logger = new Monolog\Logger('My_logger');
+    $file_handler = new Monolog\StreamHandler('../logs/app.log');
+    $logger->pushHandler($file_handler);
+
+    return $logger;
+};
+
+/** 
+ * ============================================================
+ * Inject CSRF Guard
+ * ============================================================
+ */
+$container['csrf'] = function($c) {
+    return new \Slim\Csrf\Guard;
+};
+
+/** 
+ * ============================================================
+ * Inject JWT
+ * ============================================================
+ */
+$container['jwt'] = function($c) {
+    return new StdClass;
+};
+
+/** 
+ * ============================================================
  * Inject Controllers
  * ============================================================
  */
@@ -102,21 +149,51 @@ $container['UserController'] = function ($c) {
     return new App\Controllers\UserController($c);
 };
 
-$container['PatientController'] = function ($c) {
-    return new App\Controllers\PatientController($c);
-};
-
 /** 
  * ============================================================
- * Inject Middleware
+ * Guard middleware
  * ============================================================
  */
-$container['csrf'] = function($c) {
-    return new \Slim\Csrf\Guard;
-};
-
 $app->add(new App\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new App\Middleware\OldInputMiddleware($container));
 $app->add(new App\Middleware\CsrfViewMiddleware($container));
 
 $app->add($container->csrf);
+
+/** 
+ * ============================================================
+ * JWT middleware
+ * ============================================================
+ */
+// $app->add(new Slim\Middleware\JwtAuthentication([
+//     "path"          => '/api',
+//     "logger"        => $container['logger'],
+//     "passthrough"   => ["/test"],
+//     "secret"        => getenv("JWT_SECRET"),
+//     "callback"      => function($req, $res, $args) use ($container) {
+//         $container['jwt'] = $args['decoded'];
+//     },
+//     "error"         => function($req, $res, $args) {
+//         $data["status"] = "0";
+//         $data["message"] = $args["message"];
+//         $data["data"] = "";
+        
+//         return $res
+//                 ->withHeader("Content-Type", "application/json")
+//                 ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+//     }
+// ]));
+
+/** 
+ * ============================================================
+ * CORS middleware
+ * ============================================================
+ */
+$app->add(function ($req, $res, $next) {
+    $response = $next($req, $res);
+
+    return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});

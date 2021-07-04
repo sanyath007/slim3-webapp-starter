@@ -1,13 +1,17 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\User;
+
 class UserController extends Controller
 {
     public function index($request, $response, $args) 
     {
-		$users = new \App\Models\User;
+		$users = User::all();
 
-		var_dump($users);
+		return $res->withJson([
+			$users
+		]);
     }
 
     public function user($req, $res, $args)
@@ -16,10 +20,9 @@ class UserController extends Controller
 			$cid = $args['cid'];
 			$conn = $this->db;
 
-			$sql = "SELECT e.*, p.position_name 
-					FROM employees e 
-					LEFT JOIN positions p ON (e.position_id=p.id) 
-					WHERE (emp_id=:cid)";
+			$sql = "SELECT * 
+					FROM users 
+					WHERE (cid=:cid)";
 
 			$pre = $conn->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
 			$values = [':cid' => $cid];
