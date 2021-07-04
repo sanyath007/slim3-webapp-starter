@@ -2,12 +2,9 @@
 
 // use Respect\Validation\Validator as v;
 
-session_start();
-
-require __DIR__ . '/../vendor/autoload.php';
-
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../');
 $dotenv->load();
+
 /** 
  * ============================================================
  * App Configuration
