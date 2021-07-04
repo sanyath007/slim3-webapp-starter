@@ -41,11 +41,11 @@ $app->group('', function() {
 $app->group('', function() {
     $this->get('/auth/signout', 'AuthController:getSignOut')->setName('auth.signout');
     
-    $this->get('/patients', 'PatientController:getAll')->setName('patients');;
-    $this->get('/patients/{cid}', 'PatientController:getByCid')->setName('patient');;
+    $this->get('/patients', 'PatientController:getAll')->setName('patients');
+    $this->get('/patients/{cid}', 'PatientController:getByCid')->setName('patient');
     
     $this->get('/users', 'UserController:index')->setName('users');
-    $this->get('/users/{cid}', 'UserController:user')->setName('user');;
+    $this->get('/users/{cid}', 'UserController:user')->setName('user');
 })->add(new AuthMiddleware($container));
 
 /** use this route if page not found. */

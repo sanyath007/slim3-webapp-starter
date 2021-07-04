@@ -1,6 +1,6 @@
 <?php
 
-use Respect\Validation\Validator as v;
+// use Respect\Validation\Validator as v;
 
 session_start();
 
@@ -11,9 +11,8 @@ require __DIR__ . '/../vendor/autoload.php';
  * App Configuration
  * ============================================================
  */
-$settings = require __DIR__ . '/../config/settings.php';
-$db = require __DIR__ . '/../config/db.php';
-$config['settings'] = array_merge($settings, $db);
+
+$config = require __DIR__ . '/../config/app.php';
 /** Create object of slim/app with settings */
 $app = new Slim\App($config);
 
@@ -22,13 +21,15 @@ $app = new Slim\App($config);
  * Dependencies Injection
  * ============================================================
  */
+
 require __DIR__ . '/../app/dependencies.php';
 
-v::with('App\\Validation\\Rules\\');
+// v::with('App\\Validation\\Rules\\');
 
 /** 
  * ============================================================
  * ROUTES
  * ============================================================
  */
+
 require __DIR__ . '/../app/routes.php';
